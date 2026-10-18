@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thiệp 20/10 - Lớp 10A9</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#f0506e;--pink2:#ffb3c6;--ink:#4a3350;--paper:#fffaf6;--sky1:#8fc7f3;--sky2:#d9ecfb;--sky3:#ffe3ec}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'Quicksand',sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 40%,var(--sky3) 100%);background-attachment:fixed;overflow-x:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+/* ánh nắng + bokeh */
+.rays{position:fixed;inset:-20%;background:conic-gradient(from 200deg at 85% -10%,transparent 0 10%,rgba(255,255,255,.35) 14%,transparent 18%,rgba(255,255,255,.25) 24%,transparent 29%,rgba(255,255,255,.3) 34%,transparent 40%);animation:spin 40s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bokeh{position:fixed;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.8),rgba(255,200,220,.1) 70%);filter:blur(2px);animation:float 9s ease-in-out infinite;pointer-events:none}
+@keyframes float{50%{transform:translateY(-30px) scale(1.15)}}
+.wrap{position:relative;z-index:2;max-width:620px;margin:0 auto;padding:36px 18px 80px;text-align:center}
+.title small{display:block;font:700 2rem 'Dancing Script',cursive;color:#fff;text-shadow:0 2px 8px rgba(80,120,200,.5)}
+.title h1{font:700 clamp(3rem,13vw,4.8rem)/.95 'Dancing Script',cursive;color:var(--pink);text-shadow:3px 3px 0 #fff,0 6px 18px rgba(240,80,110,.35);background:linear-gradient(90deg,#f0506e,#ff8fab,#f0506e);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(2px 2px 0 #fff);animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:200%}}
+.date{display:inline-block;margin:10px 0 6px;padding:2px 34px;font:700 2.6rem 'Quicksand';color:#fff;background:linear-gradient(90deg,#ff7a95,#ff9db3);border-radius:8px 30px 10px 26px;transform:rotate(-2deg);box-shadow:0 6px 16px rgba(240,80,110,.35);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:rotate(-2deg) scale(1.07)}}
+.class{display:block;width:max-content;margin:6px auto 26px;padding:6px 34px;font-weight:700;font-size:1.5rem;background:#fff3e3;border:3px solid var(--pink2);border-radius:40px}
+.class b{color:var(--pink)}
+.card{position:relative;background:var(--paper);border-radius:22px;padding:26px 28px 30px;text-align:left;box-shadow:0 18px 50px rgba(120,80,140,.28);border:2px solid #fff;font-size:1.02rem;line-height:1.7}
+.card h2{font:700 1.7rem 'Dancing Script',cursive;color:var(--pink);text-align:center;margin-bottom:14px}
+.card p{margin-bottom:14px;padding-left:26px;position:relative;opacity:0;transform:translateY(14px);transition:.8s}
+.card p.show{opacity:1;transform:none}
+.card p::before{content:attr(data-i);position:absolute;left:0;top:0}
+.card p.hl{padding-left:0;font:700 1.25rem 'Dancing Script',cursive;color:var(--pink);background:linear-gradient(90deg,#ffe0e8,transparent);padding:4px 12px;border-radius:30px}
+.card p.hl::before{content:''}
+.sign{display:block;width:max-content;margin:18px auto 0;padding:8px 28px;background:#ffe0e8;border-radius:30px;font-weight:700;transform:rotate(-1.5deg)}
+.btns{display:flex;gap:14px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+button{font:700 1.05rem 'Quicksand';cursor:pointer;padding:13px 28px;border-radius:40px;border:3px solid #fff;transition:.2s}
+button:hover{transform:translateY(-3px) scale(1.05)}
+.b1{background:linear-gradient(135deg,#ff6f91,#ff4f7b);color:#fff;box-shadow:0 8px 22px rgba(240,80,110,.45)}
+.b2{background:#fff;color:var(--pink);border-color:var(--pink2)}
+.foot{margin-top:22px;font:600 1.1rem 'Dancing Script',cursive;color:#7a5c80}
+/* note dán giấy */
+.note{background:#fffdf5;padding:14px 16px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.18);font:600 1rem 'Dancing Script',cursive;transition:.3s;position:relative}
+.note::before{content:'';position:absolute;top:-10px;left:50%;width:54px;height:18px;margin-left:-27px;background:rgba(255,180,200,.7);transform:rotate(-4deg)}
+.note:hover{transform:rotate(0) scale(1.08)!important;z-index:5}
+.notes{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:34px}
+.notes .note:nth-child(1){transform:rotate(-4deg)}.notes .note:nth-child(2){transform:rotate(3deg)}.notes .note:nth-child(3){transform:rotate(-2deg)}
+@media(min-width:1100px){
+ .notes{display:block;margin:0}
+ .notes .note{position:absolute;width:170px}
+ .notes .note:nth-child(1){left:-230px;top:230px;transform:rotate(-8deg)}
+ .notes .note:nth-child(2){right:-230px;top:150px;transform:rotate(7deg)}
+ .notes .note:nth-child(3){right:-210px;top:700px;transform:rotate(-5deg)}
+}
+.flowers{position:fixed;bottom:-8px;left:0;right:0;font-size:2.4rem;display:flex;justify-content:space-between;padding:0 10px;z-index:3;pointer-events:none}
+.flowers span{display:inline-block;transform-origin:bottom;animation:sway 3s ease-in-out infinite}
+.flowers span:nth-child(2n){animation-delay:-1s}.flowers span:nth-child(3n){animation-delay:-2s}
+@keyframes sway{50%{transform:rotate(8deg)}}
+.bloom{position:fixed;pointer-events:none;z-index:60;font-size:2rem;animation:up 2.2s ease-out forwards}
+@keyframes up{to{transform:translateY(-220px) scale(1.8);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.card p{opacity:1;transform:none}}
+
+/* phong bì */
+#env{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;background:linear-gradient(180deg,#8fc7f3,#ffd9e4);transition:opacity 1s .5s,visibility 1s .5s;cursor:pointer}
+#env.open{opacity:0;visibility:hidden}
+#env h3{font:700 2rem 'Dancing Script',cursive;color:#fff;text-shadow:0 2px 10px rgba(240,80,110,.5);text-align:center;padding:0 16px}
+#env em{font:600 1.05rem 'Quicksand';font-style:normal;color:#fff;animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.envelope{position:relative;width:min(80vw,320px);height:min(52vw,210px);background:#ffc2d4;border-radius:8px;box-shadow:0 20px 40px rgba(120,60,100,.35);perspective:900px;animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.envelope .paper{position:absolute;left:8%;right:8%;top:6%;bottom:6%;background:#fffaf6;border-radius:6px;display:flex;align-items:center;justify-content:center;font:700 1.5rem 'Dancing Script',cursive;color:var(--pink);transition:transform .9s .35s}
+.envelope .front{position:absolute;inset:0;background:linear-gradient(135deg,#ffb0c8 50%,transparent 50%),linear-gradient(225deg,#ffb0c8 50%,transparent 50%);border-radius:8px;z-index:2}
+.envelope .front::after{content:'';position:absolute;left:0;right:0;bottom:0;height:60%;background:#ffa5bf;clip-path:polygon(0 100%,50% 25%,100% 100%);}
+.envelope .flap{position:absolute;left:0;right:0;top:0;height:58%;background:#ff8fab;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .6s;z-index:3}
+.envelope .seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:2.2rem;z-index:4;transition:opacity .3s}
+#env.open .flap{transform:rotateX(180deg);z-index:1}
+#env.open .seal{opacity:0}
+#env.open .paper{transform:translateY(-70%)}
+#mus{position:fixed;top:14px;right:14px;z-index:70;width:48px;height:48px;padding:0;font-size:1.4rem;background:#fff;border:3px solid var(--pink2);display:none}
+#mus.on{display:block}
+#mus.play{animation:pulse2 2s ease-in-out infinite}
+@keyframes pulse2{50%{box-shadow:0 0 0 10px rgba(255,143,171,.3)}}
+</style>
+</head>
+<body>
+<div id="env">
+  <h3>Có một lá thư dành cho các cô gái 10A9 💌</h3>
+  <div class="envelope"><div class="paper">20/10 ♡</div><div class="front"></div><div class="flap"></div><div class="seal">💗</div></div>
+  <em>Chạm để mở thư</em>
+</div>
+<button id="mus" title="Bật/tắt nhạc">🎵</button>
+<div class="rays"></div>
+<canvas id="fx"></canvas>
+
+<main class="wrap">
+  <div class="title">
+    <small>Chúc Mừng</small>
+    <h1>Ngày Phụ Nữ<br>Việt Nam</h1>
+  </div>
+  <div class="date">20/10</div>
+  <span class="class">♥ LỚP <b>10A9</b> ♥</span>
+
+  <section class="card">
+    <h2>♡ Gửi những cô gái đáng yêu của 10A9 ♡</h2>
+    <p data-i="💗">Chào tất cả các bạn nữ của lớp 10A9 thân yêu! ✨ Hôm nay là ngày 20/10 rồi! Tớ muốn gửi đến mọi người những lời chúc thật chân thành. Tớ cảm thấy rất vui và may mắn khi được học chung lớp với các bạn. Mỗi người đều có nét đẹp và cá tính riêng, và chính điều đó đã làm cho 10A9 của chúng ta trở nên thật đặc biệt.</p>
+    <p data-i="🌸">Chúc các bạn luôn tươi cười mỗi ngày, vì nụ cười của mỗi người đều rất đáng yêu! Đừng thay đổi bản thân chỉ để làm hài lòng người khác nhé, bởi mỗi bạn đều có giá trị riêng. Hãy luôn tự tin, yêu thương bản thân và tin vào những điều tốt đẹp đang chờ phía trước.</p>
+    <p data-i="⭐">Chúc các bạn học tập ngày càng tiến bộ, đạt được nhiều điểm số cao và hoàn thành những mục tiêu của mình. Nếu có lúc gặp khó khăn, đừng ngần ngại chia sẻ nhé, vì chúng ta luôn có một tập thể để cùng nhau cố gắng, giúp đỡ và tiến bộ.</p>
+    <p data-i="💗">Mong các bạn luôn mạnh khỏe, vui vẻ và có thật nhiều niềm vui nhỏ bé nhưng ý nghĩa trong cuộc sống. Cảm ơn các bạn đã góp phần làm cho những ngày đến trường của tớ trở nên vui vẻ và đáng nhớ hơn.</p>
+    <p data-i="🌿">Hy vọng chúng ta sẽ luôn đoàn kết, thân thiết và cùng nhau tạo nên thật nhiều kỷ niệm đẹp trong suốt những năm tháng cấp ba. Sau này khi nhìn lại, mong rằng ai cũng sẽ mỉm cười khi nhớ về lớp 10A9 của chúng ta!</p>
+    <p class="hl">🌸 Chúc mừng ngày 20/10 đến tất cả các bạn nữ lớp 10A9!</p>
+    <p data-i="">Chúc mọi người luôn xinh đẹp, hạnh phúc, tự tin và gặp thật nhiều may mắn. Yêu mọi người nhiều lắm! 💗</p>
+    <span class="sign">✉ Người gửi: Gia Bảo ♥</span>
+  </section>
+
+  <div class="btns">
+    <button class="b1" id="fw">🎆 Bắn pháo hoa!</button>
+    <button class="b2" id="gift">💐 Tặng hoa</button>
+    <button class="b2" id="pt">🌸 Tắt hoa rơi</button>
+  </div>
+
+  <div class="notes">
+    <div class="note">Xinh đẹp<br>Tự tin<br>Hạnh phúc nhé! ♡</div>
+    <div class="note">Hoa tặng các bạn nữ 10A9 ♡<br>💐</div>
+    <div class="note">10A9 luôn là một gia đình ♡</div>
+  </div>
+  <p class="foot">Made with ♥ by Gia Bảo</p>
+</main>
+
+<div class="flowers" id="fl"></div>
+
+<script>
+(()=>{
+const cv=document.getElementById('fx'),c=cv.getContext('2d');
+let W,H;const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};rs();addEventListener('resize',rs);
+const R=(a,b)=>a+Math.random()*(b-a);
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* --- Hoa rơi --- */
+let petalsOn=true;const petals=[];
+const cols=['#ffc2d4','#ffb0c8','#ffd6e2','#fff0f5','#ff9db8'];
+function newPetal(top){return{x:R(0,W),y:top?R(-H,0):R(-30,H),s:R(7,16),vy:R(.6,1.7),sw:R(.5,1.6),ph:R(0,6.3),r:R(0,6.3),vr:R(-.03,.03),c:cols[Math.random()*5|0]}}
+for(let i=0;i<(reduce?0:45);i++)petals.push(newPetal());
+function drawPetal(p){c.save();c.translate(p.x,p.y);c.rotate(p.r);c.fillStyle=p.c;c.globalAlpha=.85;
+ c.beginPath();c.moveTo(0,-p.s);c.bezierCurveTo(p.s,-p.s*.6,p.s*.7,p.s*.8,0,p.s);c.bezierCurveTo(-p.s*.7,p.s*.8,-p.s,-p.s*.6,0,-p.s);c.fill();c.restore()}
+
+/* --- Pháo hoa --- */
+const fws=[],sparks=[];
+function launch(x,y){fws.push({x:R(W*.2,W*.8),y:H,tx:x??R(W*.15,W*.85),ty:y??R(H*.12,H*.45),t:0})}
+function burst(x,y){
+ const hue=R(300,360),n=70,heart=Math.random()<.3;
+ for(let i=0;i<n;i++){const a=i/n*6.283;let vx,vy;
+  if(heart){vx=16*Math.pow(Math.sin(a),3)*.28;vy=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a))*.28}
+  else{const v=R(1.5,5.5);vx=Math.cos(a)*v;vy=Math.sin(a)*v}
+  sparks.push({x,y,vx,vy,l:1,h:hue+R(-30,40),g:.05})}
+}
+function update(){
+ c.clearRect(0,0,W,H);
+ if(petalsOn)petals.forEach(p=>{p.y+=p.vy;p.x+=Math.sin(p.ph+=.02)*p.sw;p.r+=p.vr;if(p.y>H+20)Object.assign(p,newPetal(true));drawPetal(p)});
+ c.globalCompositeOperation='lighter';
+ for(let i=fws.length-1;i>=0;i--){const f=fws[i];f.t+=.025;const e=1-Math.pow(1-f.t,3);
+  const x=f.x+(f.tx-f.x)*e,y=f.y+(f.ty-f.y)*e;
+  c.fillStyle='#fff';c.beginPath();c.arc(x,y,2.2,0,6.3);c.fill();
+  if(f.t>=1){burst(f.tx,f.ty);fws.splice(i,1)}}
+ for(let i=sparks.length-1;i>=0;i--){const s=sparks[i];s.x+=s.vx;s.y+=s.vy;s.vy+=s.g;s.vx*=.985;s.l-=.012;
+  if(s.l<=0){sparks.splice(i,1);continue}
+  c.fillStyle=`hsla(${s.h},100%,70%,${s.l})`;c.beginPath();c.arc(s.x,s.y,2.2*s.l+.4,0,6.3);c.fill()}
+ c.globalCompositeOperation='source-over';
+ requestAnimationFrame(update)}
+update();
+const show=(n=5)=>{for(let i=0;i<n;i++)setTimeout(()=>launch(),i*350)};
+document.getElementById('fw').onclick=()=>show(6);
+document.getElementById('pt').onclick=e=>{petalsOn=!petalsOn;e.target.textContent=petalsOn?'🌸 Tắt hoa rơi':'🌸 Bật hoa rơi'};
+document.addEventListener('click',e=>{if(e.target.closest('button'))return;launch(e.clientX,e.clientY)});
+
+
+/* --- Tặng hoa: bó hoa bay lên --- */
+document.getElementById('gift').onclick=()=>{
+ const em=['💐','🌷','🌸','🌹','🌼','💖'];
+ for(let i=0;i<22;i++)setTimeout(()=>{const b=document.createElement('div');b.className='bloom';b.textContent=em[i%6];
+  b.style.left=R(5,92)+'vw';b.style.top=R(55,95)+'vh';document.body.appendChild(b);setTimeout(()=>b.remove(),2300)},i*90)};
+
+/* --- Tim theo con trỏ --- */
+let last=0;
+addEventListener('pointermove',e=>{const n=Date.now();if(n-last<90||reduce)return;last=n;
+ const h=document.createElement('div');h.className='bloom';h.textContent=['💗','✨','🌸'][Math.random()*3|0];h.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;font-size:1rem;animation-duration:1.4s`;
+ document.body.appendChild(h);setTimeout(()=>h.remove(),1400)});
+
+/* --- Hiện từng đoạn thư --- */
+const reveal=()=>document.querySelectorAll('.card p').forEach((p,i)=>setTimeout(()=>p.classList.add('show'),900+i*650));
+
+/* --- Nhạc nền --- */
+// Muốn dùng bài nhạc riêng: đặt tên file mp3 vào đây, ví dụ 'nhac.mp3'. Để trống = dùng giai điệu hộp nhạc tự tạo.
+const MUSIC_FILE='';
+const mus=document.getElementById('mus');
+let actx,timer,audioEl,playing=false;
+const chords=[[261.63,329.63,392],[220,261.63,329.63],[174.61,220,261.63],[196,246.94,293.66]];
+const mel=[[659.25,0,783.99,0,880,0,783.99,0],[880,0,783.99,0,659.25,0,523.25,0],[698.46,0,880,0,1046.5,0,880,0],[783.99,0,698.46,0,659.25,0,587.33,0]];
+const pat=[0,1,2,1,2,1,2,1];
+function tone(f,t,d,v,type){const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=f;
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+let master,step=0;
+function tick(){const t=actx.currentTime+.05,bar=(step>>3)%4,i=step%8,ch=chords[bar];
+ if(i===0){tone(ch[0]/2,t,2.6,.12,'sine');tone(ch[1]/2,t,2.6,.05,'sine')}
+ tone(ch[pat[i]]*2,t,1.2,.07,'triangle');
+ const m=mel[bar][i];if(m)tone(m,t,1.6,.09,'sine');
+ step++}
+function startMusic(){
+ if(MUSIC_FILE){audioEl=audioEl||Object.assign(new Audio(MUSIC_FILE),{loop:true,volume:.5});audioEl.play().catch(()=>{})}
+ else{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();master=actx.createGain();master.gain.value=.9;
+   const dl=actx.createDelay();dl.delayTime.value=.32;const fb=actx.createGain();fb.gain.value=.35;
+   master.connect(actx.destination);master.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(actx.destination)}
+  actx.resume();clearInterval(timer);timer=setInterval(tick,430)}
+ playing=true;mus.textContent='🎵';mus.classList.add('play')}
+function stopMusic(){if(audioEl)audioEl.pause();clearInterval(timer);if(actx)actx.suspend();playing=false;mus.textContent='🔇';mus.classList.remove('play')}
+mus.onclick=()=>playing?stopMusic():startMusic();
+
+/* --- Mở phong bì --- */
+const env=document.getElementById('env');
+env.onclick=()=>{if(env.classList.contains('open'))return;
+ env.classList.add('open');mus.classList.add('on');startMusic();
+ setTimeout(()=>{reveal();show(5)},900)};
+
+/* --- Hoa cỏ đung đưa ở chân trang + bokeh --- */
+const fl=document.getElementById('fl');
+['🌼','🌸','🌷','🌼','🌸','🌿','🌼','🌸','🌷','🌼'].forEach(f=>{const s=document.createElement('span');s.textContent=f;fl.appendChild(s)});
+for(let i=0;i<10;i++){const b=document.createElement('div');b.className='bokeh';const z=R(30,90);
+ b.style.cssText=`width:${z}px;height:${z}px;left:${R(0,95)}vw;top:${R(0,80)}vh;animation-delay:${-R(0,9)}s;opacity:${R(.3,.7)}`;document.body.appendChild(b)}
+})();
+</script>
+</body>
+</html>
